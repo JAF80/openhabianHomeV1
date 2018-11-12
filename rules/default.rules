@@ -5,6 +5,8 @@ var Timer timerKitchen = null
 var Timer timerBathroom = null
 var Timer timerStorageroom = null
 var Timer timerStorageroomLight = null
+var Timer timerStairwellLight = null
+var Timer timerToiletFan = null
 
 var DateTime RoofEnabled
 var DateTime RoofDisabled
@@ -17,21 +19,21 @@ when
 	System started or Time is midnight
 then
 	Date.postUpdate(new DateTimeType())
-end
+end	
 
 rule controlHumidityInBathroom
 when
         Item Bathroom_Humidity changed
 then
-        if ((now.getHourOfDay > 22) && (now.getHourOfDay < 08)) {
-                if ((Bathroom_Humidity.state >= 70) && (Bathroom_Fan == OFF)) {
+        if ((now.getHourOfDay() > 08) && (now.getHourOfDay() < 22)) {
+                if ((Bathroom_Humidity.state >= 80) && (Bathroom_Fan == OFF)) {
                         sendCommand(Bathroom_Fan, ON)
                 }
         } else {
-		if (Bathroom_Humidity.state <= 60) {
+		if (Bathroom_Humidity.state <= 75) {
 			timerBathroom = createTimer(now.plusSeconds(1800)) [|
                                 sendCommand(Bathroom_Fan, OFF)
-                                timerBathroom = null
+                                //timerBathroom = null
                         ]
 		}
         }
@@ -41,7 +43,7 @@ rule controlTemperatureInStorageRoom
 when
         Item StorageRoom_Temperature changed
 then
-        if ((now.getHourOfDay > 22) && (now.getHourofDay < 08)) {
+        if ((now.getHourOfDay() > 08) && (now.getHourOfDay() < 22)) {
                 if ((StorageRoom_Temperature.state >= 40) && (StorageRoom_Fan == OFF)) {
                         sendCommand(StorageRoom_Fan, ON)
                 }
@@ -49,10 +51,20 @@ then
 		if (StorageRoom_Temperature.state < 30) {
 			timerStorageroom = createTimer(now.plusSeconds(1800)) [|
                                 sendCommand(StorageRoom_Fan, OFF)
-                                timerStorageroom = null
+                                //timerStorageroom = null
                         ]
                 }
         }
+end
+
+rule shutdownToiletFan
+when
+        Item Toilet_Fan received update ON
+then
+        timerToiletFan = createTimer(now.plusSeconds(300)) [|
+                sendCommand(Toilet_Fan, OFF)
+                //timerStorageroomLight = null
+        ]
 end
 
 rule shutdownStorageroomLight
@@ -61,24 +73,18 @@ when
 then
 	timerStorageroomLight = createTimer(now.plusSeconds(600)) [|
         	sendCommand(StorageRoom_Light, OFF)
-                timerStorageroomLight = null
+                //timerStorageroomLight = null
         ]
 end
 
-rule testKitchenRoom
+rule shutdownStairwellLight
 when
-	Item ValuesBathroomHumid changed
+        Item Stairwell_Light received update ON
 then
-	if ((ValuesBathroomHumid.state >= 70) && (Kitchen_Light == OFF)) {
-		sendCommand(Kitchen_Light, ON)
-	} else {
-		if ((ValuesBathroomHumid.state < 70) && (Kitchen_Light == ON)) {
-			timerKitchen = createTimer(now.plusSeconds(1800)) [|
-	                        sendCommand(Kitchen_Light, OFF)
-        	                timerKitchen = null
-                	]
-		}
-	}
+        timerStairwellLight = createTimer(now.plusSeconds(300)) [|
+                sendCommand(Stairwell_Light, OFF)
+                //timerStorageroomLight = null
+        ]
 end
 
 rule "Startup Init"

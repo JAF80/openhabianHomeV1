@@ -26,10 +26,9 @@ Group   Hallway "Entrada"       <corridor>      (Home)
 Group   StorageRoom     "Despensa"      <suitcase>      (Home)
 // ##### Name to connect to Sonoff: stairwell
 Group	Stairwell	"Luz da Escada"	<suitcase>	(Home)
+
 Group   WeatherCasting  "Metereologia"  <climate>       (Home)
 
-Group   HomeTempSensorChart (Home, Charts)
-Group	HomeHumidSensorChart	(Home, Charts)
 Group	HomeEnergyChart	(Home, Charts)
 Number	EnergyTotal (HomeEnergyChart)
 
@@ -38,12 +37,21 @@ Group	BathroomHumidSensorChart (Home, Charts)
 Group	StorageroomTempSensorChart (Home, Charts)
 Group	StorageroomHumidSensorChart (Home, Charts)
 
+Group	TempSensorChart (Home, Charts)
+Group	HumidSensorChart (Home, Charts)
+
 // ##### FOR CONSTRUCT THE CHART  #####
 Number HomeSensorChartPeriod "Periodo" (Home)
-Number ValuesBathroomTemp       "Temperatura [%.2f ºC]" <temperature> (HomeTempSensorChart)
-        {mqtt="<[broker:tele/kitchenLightSonoff/SENSOR:state:JSONPATH($.AM2301.Temperature)]"}
-Number ValuesBathroomHumid       "Humidade [%.2f %%]" <humidity> (HomeHumidSensorChart)
-        {mqtt="<[broker:tele/kitchenLightSonoff/SENSOR:state:JSONPATH($.AM2301.Humidity)]"}
+
+Number ValuesBathroomTemp       "Temperatura WC Grande [%.2f ºC]" <temperature> (BathroomTempSensorChart, TempSensorChart)
+        {mqtt="<[broker:tele/bathroomFanSonoff/SENSOR:state:JSONPATH($.AM2301.Temperature)]"}
+Number ValuesBathroomHumid       "Humidade WC Grande [%.2f %%]" <humidity> (BathroomHumidSensorChart, HumidSensorChart)
+        {mqtt="<[broker:tele/bathroomFanSonoff/SENSOR:state:JSONPATH($.AM2301.Humidity)]"}
+
+Number ValuesStorageroomTemp       "Temperatura Despensa [%.2f ºC]" <temperature> (StorageroomTempSensorChart, TempSensorChart)
+        {mqtt="<[broker:tele/storageroomFanSonoff/SENSOR:state:JSONPATH($.AM2301.Temperature)]"}
+Number ValuesStorageroomHumid       "Humidade Despensa [%.2f %%]" <humidity> (StorageroomHumidSensorChart, HumidSensorChart)
+        {mqtt="<[broker:tele/storageroomFanSonoff/SENSOR:state:JSONPATH($.AM2301.Humidity)]"}
 
 // ##### FOR BLANK PURPOSE #####
 Number none "" (Home)
@@ -101,7 +109,7 @@ Switch  Toilet_Light    "Luz"   <light> (Toilet, gLight)
 Switch  Hallway_Light   "Luz"   <light> (Hallway, gLight)
         {mqtt=">[broker:cmnd/hallwayLightSonoff/POWER:command:*:default], <[broker:stat/hallwayLightSonoff/POWER:state:default]"}
 Switch  StorageRoom_Light       "Luz"   <light> (StorageRoom, gLight)
-	{mqtt=">[broker:cmnd/lightLivingSonoff/POWER:command:*:default], <[broker:stat/lightLivingSonoff/POWER:state:default]"}
+	{mqtt=">[broker:cmnd/StorageroomLightSonoff/POWER:command:*:default], <[broker:stat/StorageroomLightSonoff/POWER:state:default]"}
 Switch	Stairwell_Light	"Luz" <light>	(Stairwell, gLight)
 	{mqtt=">[broker:cmnd/stairwellLightSonoff/POWER:command:*:default], <[broker:stat(stairwellLightSonoff/POWER:state:default]"}
 		 
@@ -110,6 +118,8 @@ Switch  Bathroom_Fan    "Ventoinha"     <fan>   (Bathroom, gFan)
         {mqtt=">[broker:cmnd/bathroomFanSonoff/POWER:command:*:default], <[broker:stat/bathroomFanSonoff/POWER:state:default]"}
 Switch  StorageRoom_Fan "Ventoinha"     <fan>   (StorageRoom, gFan)
         {mqtt=">[broker:cmnd/storageroomFanSonoff/POWER:command:*:default], <[broker:stat/storageroomFanSonoff/POWER:state:default]"}
+Switch  Toilet_Fan "Ventoinha"     <fan>   (Toiler, gFan)
+        {mqtt=">[broker:cmnd/toiletFanSonoff/POWER:command:*:default], <[broker:stat/toiletFanSonoff/POWER:state:default]"}
 		
 // ##### DEFINITION OF ALL TEMPERATURE SENSOR #####
 Number  Bathroom_Temperature    "Temperatura"   <temperature>   (Bathroom, gTemperature, BathroomTempSensorChart)
@@ -122,6 +132,10 @@ Number  Bathroom_Humidity       "Humidade"      <humidity>      (Bathroom, gHumi
         {mqtt="<[broker:tele/bathroomFanSonoff/SENSOR:state:JSONPATH($.AM2301.Humidity)]"}
 Number  StorageRoom_Humidity    "Humidade"      <humidity>      (StorageRoom, gHumidity, StorageroomHumidSensorChart)
         {mqtt="<[broker:tele/storageroomFanSonoff/SENSOR:state:JSONPATH($.AM2301.Humidity)]"}
+
+// ##### DEFINITION OF OTHER SYSTEMS ####
+Switch	Hallway_Cam "Camera" <camera>   (Hallway)
+        {mqtt=">[broker:cmnd/hallwayCamSonoff/POWER:command:*:default], <[broker:stat(hallwayCamSonoff/POWER:state:default]"}
 
 // ##### DEFINITION OF ALL AIR CONDITIONER ON/OFF #####
 //Switch        LivingRoom_AirCon       "Ar Condicionado"       <snow>  (LivingRoom, gAirCon)
