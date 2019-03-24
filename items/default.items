@@ -1,10 +1,12 @@
 // ##### DEFINITION OF THE HOUSE STRUCTURE #####
 Group Home "Casa" <house>
 
+Group:Switch:OR(ON,OFF) gHeater	"Aquecedores"	<heating>	(Home)
 Group:Switch:OR(ON,OFF)	gLight	"Luzes"	<light>	(Home)
 Group:Switch:OR(ON,OFF)	gFan	"Ventilador"	<fan>	(Home)
 Group	gTemperature	"Temperatura"	<temperature>	(Home)
 Group	gHumidity	"Humidade"	<humidity>	(Home)
+Group	gTimer		"Temporizador"	<time>		(Home)
 
 // ##### Name to connect to Sonoff: bathroomSonoff
 Group   Bathroom        "WC Grande"     <bath>  (Home)
@@ -39,6 +41,9 @@ Group	StorageroomHumidSensorChart (Home, Charts)
 
 Group	TempSensorChart (Home, Charts)
 Group	HumidSensorChart (Home, Charts)
+
+// ##### VARIABLES FOR TIMER COUNTER #####
+Number hallwayLightTimerRemaining
 
 // ##### FOR CONSTRUCT THE CHART  #####
 Number HomeSensorChartPeriod "Periodo" (Home)
@@ -90,16 +95,38 @@ Number  Temp_Min_2      "Temperature min after tomorrow [%.0f °C]"
 Number  Temp_Max_2      "Temperature max after tomorrow [%.0f °C]"      
 	{weather="locationId=home, forecast=2, type=temperature, property=max"}
 
-// ##### DEFINITION OF ALL LIGHT #####
+// ##### DEFINITION OF THE TIMERS #####
+Number Bathroom_Towel_Heater_Timer "Temporizador Aquecedor Toalhas" <heating> (Bathroom, gTimer)
+Number Bathroom_Fan_Timer "Temporizador Ventilador" <fan> (Bathroom, gTimer)
+Number Toilet_Fan_Timer "Temporizador Ventilador" <fan> (Toilet, gTimer)
+Number Storageroom_Fan_Timer "Temporizador Ventilador" <fan> (StorageRoom, gTimer)
+Number Storageroom_Light_Timer "Temporizador Luz" <lightbulb> (StorageRoom, gTimer)
+Number Stairwell_Light_Timer "Temporizador Luz" <lightbulb> (Stairwell, gTimer)
+Number Hallway_Light_Timer "Temporizador Luz" <lightbulb> (Hallway, gTimer)
+Number Balconyoffice_Light_Timer "Temporizador Luz" <lightbulb> (BalconyOffice, gTimer)
+Number Balconymasterbedroom_Light_Timer "Temporizador Luz" <lightbulb> (BalconyMasterBedroom, gTimer)
 
+Number Countdown_Bathroom_Towel_Heater "Temporizador" <time> (Bathroom)
+Number Countdown_Bathroom_Fan "Temporizador" <time> (Bathroom)
+Number Countdown_Toilet_Fan "Temporizador" <time> (Toilet)
+Number Countdown_Storageroom_Fan "Temporizador" <time> (StorageRoom)
+Number Countdown_Storageroom_Light "Temporizador" <time> (StorageRoom)
+Number Countdown_Stairwell_Light "Temporizador" <time> (Stairwell)
+Number Countdown_Hallway_Light "Temporizador" <time> (Hallway)
+Number Countdown_Balconyoffice_Light "Temporizador" <time> (BalconyOffice)
+Number Countdown_Balconymasterbedroom_Light "Temporizador" <time> (BalconyMasterBedroom)
+
+// ##### DEFINITION OF ALL LIGHT #####
 Switch  Bathroom_Light  "Luz"   <light> (Bathroom, gLight)
         {mqtt=">[broker:cmnd/bathroomLightSonoff/POWER:command:*:default], <[broker:stat/bathroomLightSonoff/POWER:state:default]"}
 Switch  Bedroom_Light   "Luz"   <light> (Bedroom, gLight)
-        {mqtt=">[broker:cmnd/bedroomLightSonoff/POWER:command:*:default], <[broker:stat/bedroomLightSonoff/POWER:state:default]"}
+        {mqtt=">[broker:cmnd/babybedroomLightSonoff/POWER:command:*:default], <[broker:stat/babybedroomLightSonoff/POWER:state:default]"}
 Switch  Kitchen_Light   "Luz"   <light> (Kitchen, gLight)
         {mqtt=">[broker:cmnd/kitchenLightSonoff/POWER:command:*:default], <[broker:stat/kitchenLightSonoff/POWER:state:default]"}
 Switch  LivingRoom_Light        "Luz"   <light> (LivingRoom, gLight)
         {mqtt=">[broker:cmnd/livingroomLightSonoff/POWER:command:*:default], <[broker:stat/livingroomLightSonoff/POWER:state:default]"}
+Switch  Smallhallway_Light        "Luz"   <light> (LivingRoom, gLight)
+        {mqtt=">[broker:cmnd/smallhallwayLightSonoff/POWER:command:*:default], <[broker:stat/smallhallwayLightSonoff/POWER:state:default]"}
 Switch  MasterBedroom_Light     "Luz"   <light> (MasterBedroom, gLight)
         {mqtt=">[broker:cmnd/masterbedroomLightSonoff/POWER:command:*:default], <[broker:stat/masterbedroomLightSonoff/POWER:state:default]"}
 Switch  Studio_Light    "Luz"   <light> (Studio, gLight)
@@ -111,7 +138,11 @@ Switch  Hallway_Light   "Luz"   <light> (Hallway, gLight)
 Switch  StorageRoom_Light       "Luz"   <light> (StorageRoom, gLight)
 	{mqtt=">[broker:cmnd/StorageroomLightSonoff/POWER:command:*:default], <[broker:stat/StorageroomLightSonoff/POWER:state:default]"}
 Switch	Stairwell_Light	"Luz" <light>	(Stairwell, gLight)
-	{mqtt=">[broker:cmnd/stairwellLightSonoff/POWER:command:*:default], <[broker:stat(stairwellLightSonoff/POWER:state:default]"}
+	{mqtt=">[broker:cmnd/stairwellLightSonoff/POWER:command:*:default], <[broker:stat/stairwellLightSonoff/POWER:state:default]"}
+Switch	BalconyOffice_Light	"Luz"	<light>	(BalconyOffice, gLight)
+	{mqtt=">[broker:cmnd/balconyOfficeLightSonoff/POWER:command:*:default], <[broker:stat/balconyOfficeLightSonoff/POWER:state:default]"}
+Switch	BalconyMasterbedroom_Light	"Luz"	<light>	(BalconyMasterbedroom, gLight)
+	{mqtt=">[broker:cmnd/balconyMasterbedroomLightSonoff/POWER:command:*:default], <[broker:stat/balconyMasterbedroomLightSonoff/POWER:state:default]"}
 		 
 // ##### DEFINITION OF ALL FAN #####
 Switch  Bathroom_Fan    "Ventoinha"     <fan>   (Bathroom, gFan)
@@ -132,6 +163,10 @@ Number  Bathroom_Humidity       "Humidade"      <humidity>      (Bathroom, gHumi
         {mqtt="<[broker:tele/bathroomFanSonoff/SENSOR:state:JSONPATH($.AM2301.Humidity)]"}
 Number  StorageRoom_Humidity    "Humidade"      <humidity>      (StorageRoom, gHumidity, StorageroomHumidSensorChart)
         {mqtt="<[broker:tele/storageroomFanSonoff/SENSOR:state:JSONPATH($.AM2301.Humidity)]"}
+
+// ##### DEFINITION OF ALL HEATER #####
+Switch	Bathroom_Heater	"Aquecedor de Toalhas"	<heating>	(Bathroom, gHeater)
+	{mqtt=">[broker:cmnd/bathroomHeaterSonoff/POWER:command:*:default], <[broker:stat/bathroomHeaterSonoff/POWER:state:default]"}
 
 // ##### DEFINITION OF OTHER SYSTEMS ####
 Switch	Hallway_Cam "Camera" <camera>   (Hallway)

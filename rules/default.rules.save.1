@@ -1,0 +1,150 @@
+import org.openhab.model.script.actions.Timer
+import org.openhab.core.library.types.DateTimeType
+
+var Timer timerBathroomFan = null
+var Timer timerStorageroomFan = null
+var Timer timerStorageroomLight = null
+var Timer timerStairwellLight = null
+var Timer timerToiletFan = null
+var Timer timerHallwayLight = null
+var Timer timerBalconyOfficeLight = null
+var Timer timerBalconyMasterbedroomLight = null
+
+var DateTime RoofEnabled
+var DateTime RoofDisabled
+var long TimeEnabled
+var float Energy
+var float Power = 10
+
+rule SetDay
+when
+	System started or Time is midnight
+then
+	Date.postUpdate(new DateTimeType())
+end
+
+rule ControlHumidityInBathroom
+when
+	Time cron "0 0/2 10-20 ? * *"
+then
+	if ((Bathroom_Humidity.state >= 90) && (Bathroom_Fan.state == OFF)) {
+		sendCommand(Bathroom_Fan, ON)
+	} else {
+		if ((Bathroom_Humidity.state < 85) && (Bathroom_Fan.state == ON)) {
+			timerBathroomFan = createTimer(now.plusSeconds(1800)) [|
+                                sendCommand(Bathroom_Fan, OFF)
+                                timerBathroomFan = null
+                        ]
+		}
+	}
+end	
+
+rule controlTemperatureInStorageRoom
+when
+        Time cron "0 0/2 10-20 ? * *"
+then
+	if ((StorageRoom_Temperature.state >= 40) && (StorageRoom_Fan.state == OFF)) {
+		sendCommand(StorageRoom_Fan, ON)
+	} else {
+		if ((StorageRoom_Temperature.state < 30) && (StorageRoom_Fan.state == ON)) {
+			timerStorageroomFan = createTimer(now.plusSeconds(1800)) [|
+				sendCommand(StorageRoom_Fan, OFF)
+				timerStorageroomFan = null
+			]
+		}
+	}
+end
+
+rule StopFansAtNight
+when
+	Time cron "0 0/2 21-00 ? * *"
+then
+	if (Bathroom_Fan.state == ON) {
+		sendCommand(Bathroom_Fan, OFF)
+	}
+	if (StorageRoom_Fan.state == ON) {
+		sendCommand(StorageRoom_Fan, OFF)
+	}
+	if (Toilet_Fan.state == ON) {
+		sendCommand(Toilet_Fan, OFF)
+	}
+end
+
+
+
+rule shutdownToiletFan
+when
+        Item Toilet_Fan received update ON
+then
+        timerToiletFan = createTimer(now.plusSeconds(300)) [|
+                sendCommand(Toilet_Fan, OFF)
+                timerStorageroomLight = null
+        ]
+end
+
+rule shutdownBalconyOfficeLight
+when
+	Item BalconyOffice_Light received update ON
+then
+	timerBalconyOfficeLight = createTimer(now.plusSeconds(600)) [|
+		sendCommand(BalconyOffice_Light, OFF)
+		timerBalconyOfficeLight = null
+	]
+end
+
+rule shutdownBalconyMasterbedroomLight
+when
+        Item BalconyMasterbedroom_Light received update ON
+then
+        timerBalconyMasterbedroomLight = createTimer(now.plusSeconds(600)) [|
+                sendCommand(BalconyMasterbedroom_Light, OFF)
+                timerBalconyMasterbedroomLight = null
+        ]
+end
+
+rule shutdownStorageroomLight
+when
+	Item StorageRoom_Light received update ON
+then
+	timerStorageroomLight = createTimer(now.plusSeconds(600)) [|
+        	sendCommand(StorageRoom_Light, OFF)
+                timerStorageroomLight = null
+        ]
+end
+
+rule shutdownHallwayLight
+when
+        Item Hallway_Light received update ON
+then
+        timerHallwayLight = createTimer(now.plusSeconds(600)) [|
+                sendCommand(Hallway_Light, OFF)
+                timerHallwayLight = null
+        ]
+end
+
+rule "Startup Init"
+when
+	System started
+then
+	RoofEnabled = now
+	RoofDisabled = now
+	TimeEnabled = 0
+	Energy = TimeEnabled/1000 * Power
+	Energy = Energy/3600
+	EnergyTotal.postUpdate(Energy)
+end
+
+rule "Track roofCable On Off"
+when
+	Item Kitchen_Light changed
+then
+	if (Kitchen_Light == ON) {
+		Roofenabled = now
+	} else {
+		RoofDisabled = now
+		TimeEnabled = TimeEnabled + RoofDisabled.millis - RoofEnabled.millis
+		Energy = TimeEnabled/1000 * Power
+		Energy = Energy/3600
+		EnergyTotal.postUpdate(Energy)
+	}
+end
