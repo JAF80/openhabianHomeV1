@@ -2,10 +2,23 @@ sitemap default label="Casa" {
     //Frame {
     //  Webview url="/weather?locationId=home&layout=example&iconset=colorful" height=7
     //}
-    Frame {
+    Frame label="Pessoas em Casa" {
+	Switch item=gPresence icon="parents_1_1" label="Presentes"
+	Text item=none label="" icon="none"
+	Text label="Pessoas" icon="parents_1_1"
+		{
+			Switch item=Joao_Telemovel_Online icon="boy_3" label="João"
+			Switch item=Andreia_Telemovel_Online icon="girl_1" label="Andreia"
+			Switch item=Joana_Telemovel_Online icon="girl_3" label="Joana"
+		}
+    }
+    Frame label="Casa" {
         Group item=MasterBedroom label="Quarto Grande" icon="bedroom_red" {
                 Frame label="Luzes" {
-                        Switch item=MasterBedroom_Light label="Acender" icon="light"
+                        Switch item=MasterBedroom_Light label="Acender Tecto" icon="light"
+			Text item=none label="" icon="none"
+			Switch item=BalconyMasterbedroom_Light label="Acender Varanda" icon="light"
+			Text item=Countdown_Balconymasterbedroom_Light label="Temporizador [%d m]" icon="time"
                 }
 //                Frame label="Controlador do Ar Condicionado" {
 //                        Switch item=MasterBedroom_AirCon label="Ligar" icon="heating"
@@ -22,9 +35,14 @@ sitemap default label="Casa" {
                 Frame label="Luzes" {
                         Switch item=Bathroom_Light label="Acender" icon="light"
         	}
+		Frame label="Aquecedor de Toalhas" {
+			Switch item=Bathroom_Heater label="Ligar" icon="heating"
+			Text item=Countdown_Bathroom_Towel_Heater label="Temporizador [%d m]" icon="time"
+		}
                	Frame label="Controlador do Ventilador" {
                         Switch item=Bathroom_Fan label="Ligar" icon="fan"
-                        Text item=none label="" icon="none"
+			Text item=Countdown_Bathroom_Fan label="Temporizador [%d m]" icon="time"
+                        //Text item=none label="" icon="none"
                         Text item=Bathroom_Temperature label="Temperatura [%.1f ºC]" icon="temperature"
                         Text item=Bathroom_Humidity label="Humidade [%.1f %%]" icon="humidity"
                 }
@@ -67,16 +85,22 @@ sitemap default label="Casa" {
                 }
 		Frame label="Ventilador" {
 			Switch item=Toilet_Fan label="Ligar" icon="fan"
+			Text item=Countdown_Toilet_Fan label="Temporizador [%d m]" icon="time"
 		}
         }
         Group item=Kitchen label="Cozinha" icon="kitchen" {
                 Frame label="Luzes" {
-                        Switch item=Kitchen_Light label="Acender" icon="light"
+                        Switch item=Kitchen_Light label="Acender Tecto" icon="light"
+			Text item=none label="" icon="none"
+			Switch item=BalconyKitchen_Light label="Acender Varanda" icon="light"
+			Text item=Countdown_Balconykitchen_Light label="Temporizdor [%d m]" icon="time"
                 }
         }
 	Group item=LivingRoom label="Sala" icon="sofa" {
                 Frame label="Luzes" {
-                        Switch item=LivingRoom_Light label="Acender" icon="light"
+                        Switch item=LivingRoom_Light label="Acender Sala" icon="light"
+			Text item=none label="" icon="none"
+			Switch item=Smallhallway_Light label="Acender Corredor" icon="light"
                 }
 //              Frame label="Controlador do Ar Condicionado" {
 //                      Switch item=LivingRoom_AirCon label="Ligar" icon="heating"
@@ -84,9 +108,12 @@ sitemap default label="Casa" {
 //                              minValue=16 maxValue=35 step=0.5 icon="heating"
 //              }
         }
-        Group item=Studio label="Escritorio" icon="pantry" {
+        Group item=Office label="Escritório" icon="office" {
                 Frame label="Luzes" {
-                        Switch item=Studio_Light label="Acender" icon="light"
+                        Switch item=Office_Light label="Acender Tecto" icon="light"
+			Text item=none label="" icon="none"
+			Switch item=BalconyOffice_Light label="Acender Varanda" icon="light"
+			Text item=Countdown_Balconyoffice_Light label="Temporizador [%d m]" icon="time"
                 }
 //              Frame label="Controlador do Ar Condicionado" {
 //                        Switch item=Studio_AirCon label="Ligar" icon="heating"
@@ -97,23 +124,27 @@ sitemap default label="Casa" {
         Group item=Hallway label="Entrada" icon="corridor" {
                 Frame label="Luzes" {
                         Switch item=Hallway_Light label="Acender" icon="light"
+			Text item=Countdown_Hallway_Light label="Temporizador [%d m]" icon="time"
                 }
-		Frame label="Camera" {
+		Frame label="Câmera" {
 			Switch item=Hallway_Cam label="Ligar" icon="camera"
 		}
         }
 	Group item=Stairwell label="Luz da Rua" icon="outdoorlight" {
                 Frame label="Luzes" {
                         Switch item=Stairwell_Light label="Acender" icon="light"
+			Text item=Countdown_Stairwell_Light label="Temporizador [%d m]" icon="time"
                 }
         }
-        Group item=StorageRoom label="Despensa" icon="suitcase" {
+        Group item=StorageRoom label="Despensa" icon="pantry" {
                 Frame label="Luzes" {
                         Switch item=StorageRoom_Light label="Acender" icon="light"
+			Text item=Countdown_Storageroom_Light label="Temporizador [%d m]" icon="time"
                 }
 		Frame label="Controlador do Ventilador" {
                         Switch item=StorageRoom_Fan label="Ligar" icon="fan"
-                        Text item=none label="" icon="none"
+			Text item=Countdown_Storageroom_Fan label="Temporizador [%d m]" icon="time"
+                        //Text item=none label="" icon="none"
                         Text item=StorageRoom_Temperature label="Temperatura [%.1f ºC]" icon="temperature"
                         Text item=StorageRoom_Humidity label="Humidade [%.1f %%]" icon="humidity"
                 }
@@ -151,7 +182,7 @@ sitemap default label="Casa" {
 		}
         }
     }
-	Frame {
+	Frame label="Control por Grupos"{
         Group item=gLight label="Luz" icon="light" {
 		Frame label="Controlar todas as Luzes" {
 			Switch item=gLight label="Todas as luzes" icon="light" mappings=[OFF="All Off", ON="All On"]
@@ -163,10 +194,14 @@ sitemap default label="Casa" {
 			Switch item=Toilet_Light label="Casa de Banho Pequeno" icon="light"
                         Switch item=Kitchen_Light label="Cozinha" icon="light"
                         Switch item=LivingRoom_Light label="Sala" icon="light"
-                        Switch item=Studio_Light label="Escritorio" icon="light"
+			Switch item=Smallhallway_Light label="Corredor" icon="light"
+                        Switch item=Office_Light label="Escritorio" icon="light"
                         Switch item=Hallway_Light label="Entrada" icon="light"
 			Switch item=Stairwell_Light label="Luz da Rua" icon="light"
                         Switch item=StorageRoom_Light label="Despensa" icon="light"
+			Switch item=BalconyOffice_Light label="Varanda Escritorio" icon="light"
+			Switch item=BalconyMasterbedroom_Light label="Varanda Quarto Grande" icon="light"
+			Switch item=BalconyKitchen_Light label="Varanda Cozinha" icon="light"
                 }
         }
         Group item=gFan label="Ventiladores" icon="fan" {
@@ -179,6 +214,11 @@ sitemap default label="Casa" {
 			Switch item=Toilet_Fan label="Casa de Banho Pequena" icon="fan"
                 }
         }
+	Group item=gHeater label="Aquecedores" icon="heating" {
+		Frame label="Controlar todos os Aquecedores" {
+			Switch item=Bathroom_Heater label="Casa de Banho Grande" icon="heating"
+		}
+	}
         Group item=gTemperature label="Temperatura" icon="temperature" {
                 Frame label="Temperatura" {
                         Text item=Bathroom_Temperature label="Casa de Banho Grande [%.2f ºC]" icon="temperature"
@@ -244,22 +284,44 @@ sitemap default label="Casa" {
 //                }
 //        }
 	}
-	Frame label="Grafico de Consumo de Energia" {
-                        Switch item=HomeSensorChartPeriod mappings=[0="1h", 1="4h", 2="8h", 3="12h", 4="Day", 5="2 Day", 6="3 Day",
-                                7="Week", 8="2 Week", 9="Month", 10="2 Month", 11="4 Month", 12="Year"]
 
-                        Chart  item=HomeEnergyChart period=h   refresh=60000 visibility=[HomeSensorChartPeriod==0] legend=true
-                        Chart  item=HomeEnergyChart period=4h  refresh=60000 visibility=[HomeSensorChartPeriod==1] legend=true
-                        Chart  item=HomeEnergyChart period=8h  refresh=60000 visibility=[HomeSensorChartPeriod==2] legend=true
-                        Chart  item=HomeEnergyChart period=12h refresh=60000 visibility=[HomeSensorChartPeriod==3] legend=true
-                        Chart  item=HomeEnergyChart period=D   refresh=60000 visibility=[HomeSensorChartPeriod==4] legend=true
-                        Chart  item=HomeEnergyChart period=2D   refresh=60000 visibility=[HomeSensorChartPeriod==5] legend=true
-                        Chart  item=HomeEnergyChart period=3D   refresh=60000 visibility=[HomeSensorChartPeriod==6] legend=true
-                        Chart  item=HomeEnergyChart period=W   refresh=60000 visibility=[HomeSensorChartPeriod==7] legend=true
-                        Chart  item=HomeEnergyChart period=2W   refresh=60000 visibility=[HomeSensorChartPeriod==8] legend=true
-                        Chart  item=HomeEnergyChart period=M   refresh=60000 visibility=[HomeSensorChartPeriod==9] legend=true
-                        Chart  item=HomeEnergyChart period=2M   refresh=60000 visibility=[HomeSensorChartPeriod==10] legend=true
-                        Chart  item=HomeEnergyChart period=4M   refresh=60000 visibility=[HomeSensorChartPeriod==11] legend=true
-                        Chart  item=HomeEnergyChart period=Y   refresh=60000 visibility=[HomeSensorChartPeriod==12] legend=true
+	Frame label="Menu de Opções"{
+		Text label="Configuração" icon="settings" {
+			Frame label="Temporizador das luzes" {
+				Setpoint item=Storageroom_Light_Timer label="Despensa [%d m]" minValue=0 maxValue=60 step=1
+				Setpoint item=Stairwell_Light_Timer label="Escadas [%d m]" minValue=0 maxValue=60 step=1
+				Setpoint item=Hallway_Light_Timer label="Entrada [%d m]" minValue=0 maxValue=60 step=1
+				Setpoint item=Balconyoffice_Light_Timer label="Varanda do Escritório [%d m]" minValue=0 maxValue=60 step=1
+				Setpoint item=Balconymasterbedroom_Light_Timer label="Varanda do Quarto Grande [%d m]" minValue=0 maxValue=60 step=1
+				Setpoint item=Balconykitchen_Light_Timer label="Varanda da Cozinha [%d m]" minValue=0 maxValue=60 step=1
+			}
+			Frame label="Temporizador dos ventiladores" {
+				Setpoint item=Bathroom_Fan_Timer label="Casa de Banho Grande [%d m]" minValue=0 maxValue=60 step=1
+				Setpoint item=Toilet_Fan_Timer label="Casa de Banho Pequena [%d m]" minValue=0 maxValue=60 step=1
+				Setpoint item=Storageroom_Fan_Timer label="Despensa [%d m]" minValue=0 maxValue=60 step=1
+			}
+			Frame label="Temporizador dos aquecedores" {
+				Setpoint item=Bathroom_Towel_Heater_Timer label="Casa de Banho Grande [%d m]" minValue=0 maxValue=60 step=1
+			}
+		}
 	}
+
+	//Frame label="Grafico de Consumo de Energia" {
+        //                Switch item=HomeSensorChartPeriod mappings=[0="1h", 1="4h", 2="8h", 3="12h", 4="Day", 5="2 Day", 6="3 Day",
+        //                        7="Week", 8="2 Week", 9="Month", 10="2 Month", 11="4 Month", 12="Year"]
+
+//                        Chart  item=HomeEnergyChart period=h   refresh=60000 visibility=[HomeSensorChartPeriod==0] legend=true
+//                        Chart  item=HomeEnergyChart period=4h  refresh=60000 visibility=[HomeSensorChartPeriod==1] legend=true
+  //                      Chart  item=HomeEnergyChart period=8h  refresh=60000 visibility=[HomeSensorChartPeriod==2] legend=true
+    //                    Chart  item=HomeEnergyChart period=12h refresh=60000 visibility=[HomeSensorChartPeriod==3] legend=true
+      //                  Chart  item=HomeEnergyChart period=D   refresh=60000 visibility=[HomeSensorChartPeriod==4] legend=true
+        //                Chart  item=HomeEnergyChart period=2D   refresh=60000 visibility=[HomeSensorChartPeriod==5] legend=true
+          //              Chart  item=HomeEnergyChart period=3D   refresh=60000 visibility=[HomeSensorChartPeriod==6] legend=true
+            //            Chart  item=HomeEnergyChart period=W   refresh=60000 visibility=[HomeSensorChartPeriod==7] legend=true
+              //          Chart  item=HomeEnergyChart period=2W   refresh=60000 visibility=[HomeSensorChartPeriod==8] legend=true
+                //        Chart  item=HomeEnergyChart period=M   refresh=60000 visibility=[HomeSensorChartPeriod==9] legend=true
+                  //      Chart  item=HomeEnergyChart period=2M   refresh=60000 visibility=[HomeSensorChartPeriod==10] legend=true
+                    //    Chart  item=HomeEnergyChart period=4M   refresh=60000 visibility=[HomeSensorChartPeriod==11] legend=true
+                      //  Chart  item=HomeEnergyChart period=Y   refresh=60000 visibility=[HomeSensorChartPeriod==12] legend=true
+	//}
 }		

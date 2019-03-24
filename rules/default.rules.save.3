@@ -1,5 +1,5 @@
-//import org.openhab.core.library.types.*
-//import org.openhab.model.script.actions.*
+import org.openhab.core.library.types.*
+import org.openhab.model.script.actions.*
 import org.openhab.model.script.actions.Timer
 import org.openhab.core.library.types.DateTimeType
 
@@ -11,10 +11,7 @@ var Timer timerToiletFan = null
 var Timer timerHallwayLight = null
 var Timer timerBalconyOfficeLight = null
 var Timer timerBalconyMasterbedroomLight = null
-var Timer timerBalconyKitchenLight = null
 var Timer timerBathroomHeater = null
-
-var Timer timerBathroomFanPause = null
 
 var Number valueHeaterTowel = 0
 var Number valueFanBathroom = 0
@@ -24,30 +21,27 @@ var Number valueLightStorageroom = 0
 var Number valueFanStorageroom = 0
 var Number valueLightHallway = 0
 var Number valueLightBalconyoffice = 0
-var Number valueLightBalconymasterbedroom = 0
-var Number valueLightBalconykitchen = 0
+var Number valueLightMasterbedroom = 0
 
 var DateTime RoofEnabled
 var DateTime RoofDisabled
 var long TimeEnabled
 var float Energy
 var float Power = 10
-var long BathroomFanPause = 0
 
-//rule SetDay
-//when
-//	System started or Time is midnight
-//then
-//	Date.postUpdate(new DateTimeType())
-//	Bathroom_Fan_Timer.state = 30
-//end
+rule SetDay
+when
+	System started or Time is midnight
+then
+	Date.postUpdate(new DateTimeType())
+end
 
 rule ControlHumidityInBathroom
 when
 	Time cron "0 0/2 10-20 ? * *"
 then
 	valueFanBathroom = Bathroom_Fan_Timer.state as Number
-	if ((Bathroom_Humidity.state >= 99) && (Bathroom_Fan.state == OFF) && (BathroomFanPause == 0)) {
+	if ((Bathroom_Humidity.state >= 94) && (Bathroom_Fan.state == OFF)) {
 		sendCommand(Bathroom_Fan, ON)
 		timerBathroomFan = createTimer(now.plusMinutes(valueFanBathroom.intValue)) [|
                 	sendCommand(Bathroom_Fan, OFF)
@@ -58,17 +52,7 @@ then
 			Countdown_Bathroom_Fan.postUpdate(count)
 			count = count - 1
 			Thread::sleep(60000)
-			if (count == 1)
-				BathroomFanPause = 1;
 		}
-	}
-
-	if (BathroomFanPause == 1) {
-		timerBathroomFanPause = createTimer(now.plusMinutes(180)) [|
-			sendCommand(Bathroom_Fan, OFF)
-			timerBathroomFanPause = null
-			BathroomFanPause = 0
-		]		
 	}
 end	
 
@@ -76,23 +60,19 @@ rule controlTemperatureInStorageRoom
 when
         Time cron "0 0/2 10-20 ? * *"
 then
-	valueFanStorageroom = Storageroom_Fan_Timer.state as Number
 	if ((StorageRoom_Temperature.state >= 40) && (StorageRoom_Fan.state == OFF)) {
 		sendCommand(StorageRoom_Fan, ON)
-		timerStorageroomFan = createTimer(now.plusMinutes(valueFanStorageroom.intValue)) [|
-			sendCommand(StorageRoom_Fan, OFF)
-			timerStorageroomFan = null
-		]
-		var count = valueFanStorageroom
-               	while(count >= 0) {
-                       	Countdown_Storageroom_Fan.postUpdate(count)
-                       	count = count - 1
-                       	Thread::sleep(60000)
-	        }
+	} else {
+		if ((StorageRoom_Temperature.state < 30) && (StorageRoom_Fan.state == ON)) {
+			timerStorageroomFan = createTimer(now.plusMinutes(30)) [|
+				sendCommand(StorageRoom_Fan, OFF)
+				timerStorageroomFan = null
+			]
+		}
 	}
 end
 
-rule StopEquipmentAtNight
+rule StopFansAtNight
 when
 	Time cron "0 0/2 21-00 ? * *"
 then
@@ -152,7 +132,7 @@ then
 	]
 	var count = valueLightBalconyoffice
 	while(count >= 0) {
-		Countdown_Balconyoffice_Light.postUpdate(count)
+ 		Countdown_Balconyoffice_Light.postUpdate(count)
 		count = count - 1
 		Thread::sleep(60000)
 	}
@@ -163,100 +143,46 @@ when
         Item BalconyMasterbedroom_Light received update ON
 then
 	valueLightBalconymasterbedroom = Balconymasterbedroom_Light_Timer.state as Number
-        timerBalconyMasterbedroomLight = createTimer(now.plusMinutes(valueLightBalconymasterbedroom.intValue)) [|
+        timerBalconyMasterbedroomLight = createTimer(now.plus
+(600)) [|
                 sendCommand(BalconyMasterbedroom_Light, OFF)
                 timerBalconyMasterbedroomLight = null
         ]
-	var count = valueLightBalconymasterbedroom
-        while(count >= 0) {
-                Countdown_Balconymasterbedroom_Light.postUpdate(count)
-                count = count - 1
-                Thread::sleep(60000)
-        }
-end
-
-rule shutdownBalconyKitchenLight
-when
-	Item BalconyKitchen_Light received update ON
-then
-	valueLightBalconykitchen = Balconykitchen_Light_Timer.state as Number
-	timerBalconyKitchenLight = createTimer(now.plusMinutes(valueLightBalconykitchen.intValue)) [|
-		sendCommand(BalconyKitchen_Light, OFF)
-		timerBalconyKitchenLight = null
-	]
-	var count = valueLightBalconykitchen
-	while(count >= 0) {
-		Countdown_Balconykitchen_Light.postUpdate(count)
-		count = count - 1
-		Thread::sleep(60000)
-	}
 end
 
 rule shutdownStorageroomLight
 when
 	Item StorageRoom_Light received update ON
 then
-	valueLightStorageroom = Storageroom_Light_Timer.state as Number
-	timerStorageroomLight = createTimer(now.plusMinutes(valueLightStorageroom.intValue)) [|
-       		sendCommand(StorageRoom_Light, OFF)
-               	timerStorageroomLight = null
-       	]
-	var count = valueLightStorageroom
-	while(count >= 0) {
-		Countdown_Storageroom_Light.postUpdate(count)
-		count = count - 1
-		Thread::sleep(60000)
-	}
+	timerStorageroomLight = createTimer(now.plusSeconds(600)) [|
+        	sendCommand(StorageRoom_Light, OFF)
+                timerStorageroomLight = null
+        ]
 end
 
 rule shutdownHallwayLight
 when
         Item Hallway_Light received update ON
 then
-	valueLightHallway = Hallway_Light_Timer.state as Number
-        timerHallwayLight = createTimer(now.plusMinutes(valueLightHallway.intValue)) [|
-	       	sendCommand(Hallway_Light, OFF)
-               	timerHallwayLight = null
+	//int delay = 30
+	//postUpdate(hallwayLightTimerRemaining, delay)//(timerHallwayLight.state as Number).intValue)
+        timerHallwayLight = createTimer(now.plusSeconds(600)) [|
+        	//postUpdate(hallwayLightTimerRemaining, (timerHallwayLight.state as Number).intValue - 1)
+	        sendCommand(Hallway_Light, OFF)
+                timerHallwayLight = null
         ]
-	var count = valueLightHallway
-	while(count >= 0) {
-		Countdown_Hallway_Light.postUpdate(count)
-		count = count - 1
-		Thread::sleep(60000)
-	}
 
-end
-
-rule shutdownStairwellLight
-when
-	Item Stairwell_Light received update ON
-then
-	valueLightStairwell = Stairwell_Light_Timer.state as Number
-	timerStairwellLight = createTimer(now.plusMinutes(valueLightStairwell.intValue)) [|
-		sendCommand(Stairwell_Light, OFF)
-		timerStairwellLight = null
-	]
-	var count = valueLightStairwell
-	while(count >= 0) {
-		Countdown_Stairwell_Light.postUpdate(count)
-		count = count - 1
-		Thread::sleep(60000)
-	}
-end
-
-rule UserOutOfHouse
-when
-	Item gPresence changed to OFF
-then
-	sendCommand(gLight, OFF)
-	sendCommand(Hallway_Cam, ON)
-end
-
-rule UserInHouse
-when
-	Item gPresence changed to ON
-then
-	sendCommand(Hallway_Cam, OFF)
+//	val org.eclipse.xtext.xbase.lib.Functions$Function2 makeTimer = [
+//		int myDelay,
+//		org.eclipse.xtext.xbase.lib.Functions$Function2 makeTimer2 |
+//			if(myDelay>0) {
+//				postUpdate(hallwayLightTimerRemaining, myDelay)
+//				timerHallwayLight = createTimer(now.plusSeconds(600)) [|
+//					postUpdate(hallwayLightTimerRemaining, myDelay-1)
+//					makeTimer2.apply(myDelay-1, makeTimer2)
+//				]
+//			}
+//	]
 end
 
 rule startupInit
