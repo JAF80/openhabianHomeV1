@@ -42,47 +42,47 @@ var long BathroomFanPause = 0
 //	Bathroom_Fan_Timer.state = 30
 //end
 
-rule ControlHumidityInBathroom
-when
-	Time cron "0 0/2 10-20 ? * *"
-then
-	valueFanBathroom = Bathroom_Fan_Timer.state as Number
-	if ((Bathroom_Humidity.state >= 99) && (Bathroom_Temperature.state >= 24) && (Bathroom_Fan.state == OFF)) {
-		sendCommand(Bathroom_Fan, ON)
-		timerBathroomFan = createTimer(now.plusMinutes(valueFanBathroom.intValue)) [|
-                	sendCommand(Bathroom_Fan, OFF)
-                        timerBathroomFan = null
-                ]
-		var count = valueFanBathroom
-		while(count >= 0) {
-			Countdown_Bathroom_Fan.postUpdate(count)
-			count = count - 1
-			Thread::sleep(60000)
-			if (count == 1)
-				BathroomFanPause = 1;
-		}
-	}
-end	
+//rule ControlHumidityInBathroom
+//when
+//	Time cron "0 0/2 10-20 ? * *"
+//then
+	//valueFanBathroom = Bathroom_Fan_Timer.state as Number
+	//if ((Bathroom_Humidity.state >= 99) && (Bathroom_Temperature.state >= 24) && (Bathroom_Fan.state == OFF)) {
+	//	sendCommand(Bathroom_Fan, ON)
+	//	timerBathroomFan = createTimer(now.plusMinutes(valueFanBathroom.intValue)) [|
+        //        	sendCommand(Bathroom_Fan, OFF)
+        //                timerBathroomFan = null
+        //        ]
+	//	var count = valueFanBathroom
+	//	while(count >= 0) {
+	//		Countdown_Bathroom_Fan.postUpdate(count)
+	//		count = count - 1
+	//		Thread::sleep(60000)
+	//		if (count == 1)
+	//			BathroomFanPause = 1;
+	//	}
+	//}
+//end	
 
-rule controlTemperatureInStorageRoom
-when
-        Time cron "0 0/2 10-20 ? * *"
-then
-	valueFanStorageroom = Storageroom_Fan_Timer.state as Number
-	if ((StorageRoom_Temperature.state >= 40) && (StorageRoom_Fan.state == OFF)) {
-		sendCommand(StorageRoom_Fan, ON)
-		timerStorageroomFan = createTimer(now.plusMinutes(valueFanStorageroom.intValue)) [|
-			sendCommand(StorageRoom_Fan, OFF)
-			timerStorageroomFan = null
-		]
-		var count = valueFanStorageroom
-               	while(count >= 0) {
-                       	Countdown_Storageroom_Fan.postUpdate(count)
-                       	count = count - 1
-                       	Thread::sleep(60000)
-	        }
-	}
-end
+//rule controlTemperatureInStorageRoom
+//when
+//        Time cron "0 0/2 10-20 ? * *"
+//then
+//	valueFanStorageroom = Storageroom_Fan_Timer.state as Number
+//	if ((StorageRoom_Temperature.state >= 40) && (StorageRoom_Fan.state == OFF)) {
+//		sendCommand(StorageRoom_Fan, ON)
+//		timerStorageroomFan = createTimer(now.plusMinutes(valueFanStorageroom.intValue)) [|
+//			sendCommand(StorageRoom_Fan, OFF)
+//			timerStorageroomFan = null
+//		]
+//		var count = valueFanStorageroom
+//               	while(count >= 0) {
+//                       	Countdown_Storageroom_Fan.postUpdate(count)
+//                       	count = count - 1
+//                       	Thread::sleep(60000)
+//	        }
+//	}
+//end
 
 rule StopEquipmentAtNight
 when
