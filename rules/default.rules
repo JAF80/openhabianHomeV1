@@ -259,17 +259,17 @@ then
 	sendCommand(Hallway_Cam, OFF)
 end
 
-rule startupInit
-when
-	System started
-then
-	RoofEnabled = now
-	RoofDisabled = now
-	TimeEnabled = 0
-	Energy = TimeEnabled/1000 * Power
-	Energy = Energy/3600
-	EnergyTotal.postUpdate(Energy)
-end
+//rule startupInit
+//when
+//	System started
+//then
+//	RoofEnabled = now
+//	RoofDisabled = now
+//	TimeEnabled = 0
+//	Energy = TimeEnabled/1000 * Power
+//	Energy = Energy/3600
+//	EnergyTotal.postUpdate(Energy)
+//end
 
 //rule "Track roofCable On Off"
 //when
