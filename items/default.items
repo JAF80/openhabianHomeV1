@@ -7,9 +7,12 @@ Group:Switch:OR(ON,OFF)	gFan	"Ventilador"	<fan>	(Home)
 Group	gTemperature	"Temperatura"	<temperature>	(Home)
 Group	gHumidity	"Humidade"	<humidity>	(Home)
 Group	gTimer		"Temporizador"	<time>		(Home)
+<<<<<<< HEAD
 
 // ##### Cell Phones connected to OpenHabian
 Group:Switch:OR(ON, OFF)	gPresence	"gPresence"	<icon_presence>
+=======
+>>>>>>> origin/master
 
 // ##### Name to connect to Sonoff: bathroomSonoff
 Group   Bathroom        "WC Grande"     <bath>  (Home)
@@ -114,7 +117,10 @@ Number Stairwell_Light_Timer "Temporizador Luz" <lightbulb> (Stairwell, gTimer)
 Number Hallway_Light_Timer "Temporizador Luz" <lightbulb> (Hallway, gTimer)
 Number Balconyoffice_Light_Timer "Temporizador Luz" <lightbulb> (BalconyOffice, gTimer)
 Number Balconymasterbedroom_Light_Timer "Temporizador Luz" <lightbulb> (BalconyMasterBedroom, gTimer)
+<<<<<<< HEAD
 Number Balconykitchen_Light_Timer "Temporizador Luz" <lightbulb> (BalconyKitchen, gTimer)
+=======
+>>>>>>> origin/master
 
 Number Countdown_Bathroom_Towel_Heater "Temporizador" <time> (Bathroom)
 Number Countdown_Bathroom_Fan "Temporizador" <time> (Bathroom)
@@ -125,25 +131,38 @@ Number Countdown_Stairwell_Light "Temporizador" <time> (Stairwell)
 Number Countdown_Hallway_Light "Temporizador" <time> (Hallway)
 Number Countdown_Balconyoffice_Light "Temporizador" <time> (BalconyOffice)
 Number Countdown_Balconymasterbedroom_Light "Temporizador" <time> (BalconyMasterBedroom)
+<<<<<<< HEAD
 Number Countdown_Balconykitchen_Light "Temporizador" <time> (BalconyKitchen)
 
 // ##### DEFINITION OF ALL LIGHT #####
 //192.168.1.72
+=======
+
+// ##### DEFINITION OF ALL LIGHT #####
+>>>>>>> origin/master
 Switch  Bathroom_Light  "Luz"   <light> (Bathroom, gLight)
         {mqtt=">[broker:cmnd/bathroomLightSonoff/POWER:command:*:default], <[broker:stat/bathroomLightSonoff/POWER:state:default]"}
 // 192.168.1.80
 Switch  Bedroom_Light   "Luz"   <light> (Bedroom, gLight)
         {mqtt=">[broker:cmnd/babybedroomLightSonoff/POWER:command:*:default], <[broker:stat/babybedroomLightSonoff/POWER:state:default]"}
+<<<<<<< HEAD
 // 192.168.1.68
+=======
+>>>>>>> origin/master
 Switch  Kitchen_Light   "Luz"   <light> (Kitchen, gLight)
         {mqtt=">[broker:cmnd/kitchenLightSonoff/POWER:command:*:default], <[broker:stat/kitchenLightSonoff/POWER:state:default]"}
 // 192.168.1.83
 Switch  LivingRoom_Light        "Luz"   <light> (LivingRoom, gLight)
         {mqtt=">[broker:cmnd/livingroomLightSonoff/POWER:command:*:default], <[broker:stat/livingroomLightSonoff/POWER:state:default]"}
+<<<<<<< HEAD
 // 192.168.1.71
 Switch  Smallhallway_Light        "Luz"   <light> (LivingRoom, gLight)
         {mqtt=">[broker:cmnd/smallhallwayLightSonoff/POWER:command:*:default], <[broker:stat/smallhallwayLightSonoff/POWER:state:default]"}
 // 192.168.1.131
+=======
+Switch  Smallhallway_Light        "Luz"   <light> (LivingRoom, gLight)
+        {mqtt=">[broker:cmnd/smallhallwayLightSonoff/POWER:command:*:default], <[broker:stat/smallhallwayLightSonoff/POWER:state:default]"}
+>>>>>>> origin/master
 Switch  MasterBedroom_Light     "Luz"   <light> (MasterBedroom, gLight)
         {mqtt=">[broker:cmnd/masterbedroomLightSonoff/POWER:command:*:default], <[broker:stat/masterbedroomLightSonoff/POWER:state:default]"}
 // 192.168.1.79
@@ -161,6 +180,7 @@ Switch  StorageRoom_Light       "Luz"   <light> (StorageRoom, gLight)
 // 192.168.1.69
 Switch	Stairwell_Light	"Luz" <light>	(Stairwell, gLight)
 	{mqtt=">[broker:cmnd/stairwellLightSonoff/POWER:command:*:default], <[broker:stat/stairwellLightSonoff/POWER:state:default]"}
+<<<<<<< HEAD
 // 192.168.1.75
 Switch	BalconyOffice_Light	"Luz"	<light>	(BalconyOffice, gLight)
 	{mqtt=">[broker:cmnd/balconyOfficeLightSonoff/POWER:command:*:default], <[broker:stat/balconyOfficeLightSonoff/POWER:state:default]"}
@@ -170,6 +190,12 @@ Switch	BalconyMasterbedroom_Light	"Luz"	<light>	(BalconyMasterbedroom, gLight)
 // 192.168.1.73
 Switch	BalconyKitchen_Light	"Luz"	<light>	(BalconyKitchen, gLight)
 	{mqtt=">[broker:cmnd/balconyKitchenLightSonoff/POWER:command:*:default], <[broker:stat/balconyKitchenLightSonoff/POWER:state:default]"}
+=======
+Switch	BalconyOffice_Light	"Luz"	<light>	(BalconyOffice, gLight)
+	{mqtt=">[broker:cmnd/balconyOfficeLightSonoff/POWER:command:*:default], <[broker:stat/balconyOfficeLightSonoff/POWER:state:default]"}
+Switch	BalconyMasterbedroom_Light	"Luz"	<light>	(BalconyMasterbedroom, gLight)
+	{mqtt=">[broker:cmnd/balconyMasterbedroomLightSonoff/POWER:command:*:default], <[broker:stat/balconyMasterbedroomLightSonoff/POWER:state:default]"}
+>>>>>>> origin/master
 		 
 // ##### DEFINITION OF ALL FAN #####
 // 192.168.1.85
@@ -199,7 +225,10 @@ Number  StorageRoom_Humidity    "Humidade"      <humidity>      (StorageRoom, gH
         {mqtt="<[broker:tele/storageroomFanSonoff/SENSOR:state:JSONPATH($.AM2301.Humidity)]"}
 
 // ##### DEFINITION OF ALL HEATER #####
+<<<<<<< HEAD
 // 192.168.1.78
+=======
+>>>>>>> origin/master
 Switch	Bathroom_Heater	"Aquecedor de Toalhas"	<heating>	(Bathroom, gHeater)
 	{mqtt=">[broker:cmnd/bathroomHeaterSonoff/POWER:command:*:default], <[broker:stat/bathroomHeaterSonoff/POWER:state:default]"}
 
